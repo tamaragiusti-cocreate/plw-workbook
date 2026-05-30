@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Digital Professional Learning Workbook — CI 6143</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FFF8F0;--peach:#FDEBD0;--green:#3DAA5C;--green-dark:#2E8A48;--green-light:#E8F7ED;
+  --navy:#1A1A2E;--blue-bg:#D6EAF8;--gray:#6B7280;--border:#D1D5DB;--white:#FFFFFF;
+  --red:#E74C3C;--pink:#FDEEF3;--pink-border:#F4C0D1;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh}
+.screen{display:none;animation:fadeIn 0.4s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HEADER */
+.header{background:var(--navy);color:white;padding:1.25rem 1.5rem;text-align:center}
+.header h1{font-size:20px;font-weight:800;line-height:1.4}
+.header p{font-size:13px;opacity:0.7;margin-top:4px}
+
+/* WELCOME */
+.welcome-card{max-width:540px;margin:2rem auto;background:white;border-radius:16px;border:2px solid var(--navy);overflow:hidden}
+.welcome-banner{background:var(--green);padding:1.75rem;text-align:center;color:white}
+.welcome-banner h2{font-size:26px;font-weight:800}
+.welcome-banner p{font-size:14px;opacity:0.9;margin-top:6px}
+.welcome-body{padding:1.75rem}
+.step-pills{display:flex;flex-wrap:wrap;gap:8px;margin:1rem 0}
+.step-pill{background:var(--green-light);color:var(--green-dark);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #b8e8c8}
+.email-section{margin-top:1.25rem}
+.email-section label{font-size:13px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px}
+.email-input{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;font-size:15px;font-family:'Nunito',sans-serif;outline:none;transition:border 0.2s}
+.email-input:focus{border-color:var(--green)}
+.btn-primary{width:100%;padding:14px;background:var(--green);color:white;border:none;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;margin-top:12px;transition:background 0.2s,transform 0.1s;font-family:'Nunito',sans-serif}
+.btn-primary:hover{background:var(--green-dark)}
+.btn-primary:active{transform:scale(0.98)}
+.btn-secondary{background:white;color:var(--green-dark);border:2px solid var(--green);border-radius:10px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s}
+.btn-secondary:hover{background:var(--green-light)}
+.divider{text-align:center;color:var(--gray);font-size:13px;margin:14px 0}
+.error-msg{color:var(--red);font-size:12px;margin-top:6px;display:none}
+.notice{font-size:11px;color:var(--gray);text-align:center;margin-top:10px}
+
+/* SENT */
+.sent-card{max-width:480px;margin:3rem auto;background:white;border-radius:16px;border:2px solid var(--navy);padding:2.5rem;text-align:center}
+.sent-icon{width:64px;height:64px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:30px}
+.sent-card h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.sent-card p{font-size:14px;color:var(--gray);line-height:1.6}
+.sent-email{font-weight:700;color:var(--green-dark)}
+
+/* DASHBOARD */
+.dashboard{max-width:600px;margin:0 auto;padding:2rem 1.5rem}
+.user-bar{background:white;border-radius:12px;border:1.5px solid var(--border);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.user-bar span{font-size:12px;color:var(--gray)}
+.user-bar strong{font-size:14px;color:var(--navy)}
+.progress-card{background:var(--blue-bg);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;border:1.5px solid #a9cce3}
+.progress-card h3{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.progress-bar-bg{background:white;border-radius:20px;height:12px;overflow:hidden}
+.progress-bar-fill{background:var(--green);height:100%;border-radius:20px;transition:width 0.5s ease}
+.progress-label{font-size:12px;color:var(--gray);margin-top:6px}
+.steps-grid{display:flex;flex-direction:column;gap:10px}
+.step-card{background:white;border-radius:12px;border:1.5px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s}
+.step-card:hover{border-color:var(--green);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.step-card.completed{border-color:var(--green);background:var(--green-light)}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--navy);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.step-card.completed .step-num{background:var(--green)}
+.step-info{flex:1}
+.step-info h4{font-size:15px;font-weight:700;margin-bottom:2px}
+.step-info p{font-size:12px;color:var(--gray)}
+.step-badge{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:700;white-space:nowrap}
+.badge-done{background:var(--green);color:white}
+.badge-start{background:var(--navy);color:white}
+.badge-revisit{background:var(--green-light);color:var(--green-dark);border:1px solid #b8e8c8}
+
+/* QUESTIONNAIRE */
+.q-container{max-width:600px;margin:0 auto;padding:2rem 1.5rem}
+.q-header{background:white;border-radius:12px;border:1.5px solid var(--border);padding:1.25rem;margin-bottom:1.25rem}
+.q-header h2{font-size:20px;font-weight:800;color:var(--navy)}
+.q-header p{font-size:13px;color:var(--gray);margin-top:4px;line-height:1.5}
+.section-block{background:white;border-radius:12px;border:1.5px solid var(--border);padding:1.5rem;margin-bottom:1rem}
+.section-title{font-size:15px;font-weight:800;color:var(--green-dark);margin-bottom:1rem;padding-bottom:10px;border-bottom:2px solid var(--green-light);display:flex;align-items:center;gap:8px}
+.section-title span{background:var(--green);color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.q-item{margin-bottom:1.25rem}
+.q-item:last-child{margin-bottom:0}
+.q-label{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.5}
+textarea.q-input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Nunito',sans-serif;resize:vertical;min-height:90px;outline:none;transition:border 0.2s;color:var(--navy);line-height:1.5}
+textarea.q-input:focus{border-color:var(--green)}
+
+/* CHECKBOXES */
+.checkbox-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.cb-item{display:flex;align-items:center;gap:6px;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;transition:all 0.2s;font-size:13px;font-weight:600;user-select:none}
+.cb-item:hover{border-color:var(--green);background:var(--green-light)}
+.cb-item.checked{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+.cb-item input{display:none}
+.other-input{margin-top:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;width:100%;transition:border 0.2s}
+.other-input:focus{border-color:var(--green)}
+
+/* RATINGS */
+.rating-item{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.rating-item:last-child{border-bottom:none;margin-bottom:0}
+.rating-label{font-size:13px;font-weight:600;flex:1;color:var(--navy)}
+.rating-stars{display:flex;gap:5px}
+.star{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 0.15s;color:var(--gray)}
+.star.active{background:var(--green);border-color:var(--green);color:white}
+.star:hover{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+.rating-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);margin-bottom:10px}
+
+/* REVIEW */
+.review-block{background:var(--peach);border:1.5px solid #f0c080;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.review-block h3{font-size:14px;font-weight:800;color:#8B5E00;margin-bottom:12px}
+.review-answer{margin-bottom:10px}
+.review-q{font-size:11px;color:var(--gray);margin-bottom:3px;font-weight:600}
+.review-a{font-size:13px;font-weight:600;color:var(--navy);background:white;padding:8px 12px;border-radius:6px;line-height:1.5}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:1.5rem}
+.btn-save{flex:1;padding:14px;background:var(--green);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s}
+.btn-save:hover{background:var(--green-dark)}
+.btn-back{padding:14px 20px;background:white;color:var(--navy);border:2px solid var(--border);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s}
+.btn-back:hover{border-color:var(--navy)}
+
+/* SMART GOALS */
+.intro-card{background:var(--pink);border:1.5px solid var(--pink-border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.intro-card h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.intro-card p{font-size:13px;color:var(--navy);line-height:1.6;margin-bottom:10px}
+.consider-box{background:white;border-radius:8px;border:1px solid var(--border);padding:10px 14px;margin-bottom:10px}
+.consider-box p{font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.consider-box ul{list-style:none;padding:0}
+.consider-box ul li{font-size:12px;color:var(--navy);padding:4px 0 4px 16px;position:relative;line-height:1.4}
+.consider-box ul li:before{content:'→';position:absolute;left:0;color:var(--green);font-size:11px;top:4px}
+.goal-card{background:white;border:2px solid var(--navy);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;position:relative}
+.goal-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:10px;border-bottom:2px solid var(--cream)}
+.goal-card-title{font-size:16px;font-weight:800;color:var(--navy)}
+.btn-remove-goal{background:none;border:1.5px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--gray);cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s}
+.btn-remove-goal:hover{border-color:var(--red);color:var(--red)}
+.smart-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:1.25rem}
+.smart-letter{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;font-size:18px;font-weight:800;color:white;flex-shrink:0;margin-top:2px}
+.smart-s{background:#E74C3C}.smart-m{background:#E67E22}.smart-a{background:#F1C40F;color:var(--navy)}.smart-r{background:#3DAA5C}.smart-t{background:#2980B9}
+.smart-row-content{flex:1}
+.smart-row-content .q-label{margin-bottom:4px;font-size:14px}
+.final-statement{background:var(--green-light);border:2px solid var(--green);border-radius:10px;padding:1rem 1.25rem;margin-top:1.25rem}
+.final-statement label{font-size:14px;font-weight:800;color:var(--green-dark);display:block;margin-bottom:8px}
+textarea.final-input{width:100%;padding:10px 12px;border:1.5px solid var(--green);border-radius:8px;font-size:14px;font-family:'Nunito',sans-serif;resize:vertical;min-height:90px;outline:none;background:white;color:var(--navy);line-height:1.5}
+.btn-add-goal{width:100%;padding:12px;background:white;color:var(--navy);border:2px dashed var(--border);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;margin-bottom:1rem}
+.btn-add-goal:hover{border-color:var(--green);color:var(--green)}
+
+/* PLACEHOLDER */
+.placeholder-container{max-width:600px;margin:0 auto;padding:2rem 1.5rem}
+
+/* STEP 3 PATHWAYS */
+.pathway-card{border:2px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden;transition:all 0.2s}
+.pathway-card.selected{border-color:var(--green)}
+.pathway-header{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;cursor:pointer;background:white;transition:background 0.2s}
+.pathway-header:hover{background:var(--cream)}
+.pathway-card.selected .pathway-header{background:var(--green-light)}
+.pathway-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:13px}
+.pathway-card.selected .pathway-check{background:var(--green);border-color:var(--green);color:white}
+.pathway-title{font-size:14px;font-weight:800;color:var(--navy);flex:1}
+.pathway-rating{display:flex;gap:3px;align-items:center}
+.pathway-dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
+.pathway-dot.filled{background:var(--green)}
+.pathway-body{padding:0 1.25rem;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;background:white}
+.pathway-card.selected .pathway-body{max-height:600px;padding:1rem 1.25rem}
+.pathway-desc{font-size:12px;color:var(--gray);line-height:1.6;margin-bottom:10px}
+.pathway-examples{font-size:11px;color:var(--navy);margin-bottom:10px}
+.pathway-examples strong{display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;color:var(--gray)}
+.pathway-examples ul{list-style:none;padding:0}
+.pathway-examples ul li{padding:2px 0 2px 14px;position:relative}
+.pathway-examples ul li:before{content:'·';position:absolute;left:4px;color:var(--green);font-weight:800}
+.pathway-consider{font-size:12px;color:var(--green-dark);font-weight:700;margin-bottom:8px;padding:8px 10px;background:var(--green-light);border-radius:6px;line-height:1.5}
+.pathway-plan-label{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.pathway-plan-input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;resize:vertical;min-height:80px;outline:none;transition:border 0.2s;color:var(--navy);line-height:1.5}
+.pathway-plan-input:focus{border-color:var(--green)}
+.s1-recall{background:var(--peach);border:1.5px solid #f0c080;border-radius:10px;padding:10px 14px;margin-bottom:1rem;font-size:13px;color:#8B5E00;font-weight:600;line-height:1.5}
+.impl-card{background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.impl-card-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.impl-card-app{font-size:12px;color:var(--green-dark);font-weight:600;margin-bottom:8px;padding:5px 10px;background:var(--green-light);border-radius:6px;display:inline-block}
+.impl-card textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;resize:vertical;min-height:75px;outline:none;transition:border 0.2s;color:var(--navy);line-height:1.5;margin-top:6px}
+.impl-card textarea:focus{border-color:var(--green)}
+.sharing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:6px}
+.sharing-idea{background:var(--cream);border:2px solid var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s;user-select:none}
+.sharing-idea:hover{border-color:var(--green);background:var(--green-light)}
+.sharing-idea.selected{border-color:var(--green);background:var(--green-light)}
+.sharing-icon{font-size:24px;margin-bottom:6px}
+.sharing-label{font-size:12px;font-weight:700;color:var(--navy);line-height:1.4}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Interactive Digital Professional Learning Workbook</h1>
+  <p>American College of Education &nbsp;|&nbsp; CI 6143 &nbsp;|&nbsp; Tamara Giusti</p>
+</div>
+
+<!-- LOADING -->
+<div class="screen" id="screen-loading">
+  <div style="max-width:400px;margin:4rem auto;text-align:center;padding:2rem">
+    <div style="font-size:40px;margin-bottom:1rem">🌱</div>
+    <div style="font-size:16px;font-weight:700;color:var(--navy)">Loading your workbook…</div>
+    <div style="font-size:13px;color:var(--gray);margin-top:8px">Fetching your saved progress</div>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome-card">
+    <div class="welcome-banner">
+      <h2>Welcome!</h2>
+      <p>Your personalized professional learning journey starts here.</p>
+    </div>
+    <div class="welcome-body">
+      <p style="font-size:14px;color:var(--gray);line-height:1.7">Move through each step at your own pace and return to this workbook throughout the year as you continue your learning journey.</p>
+      <div class="step-pills">
+        <span class="step-pill">1 · Self-Reflection</span>
+        <span class="step-pill">2 · SMART Goals</span>
+        <span class="step-pill">3 · Learning Pathways</span>
+        <span class="step-pill">4 · Apply Your Learning</span>
+        <span class="step-pill">5 · Track Your Growth</span>
+        <span class="step-pill">6 · Collaborate & Lead</span>
+      </div>
+      <div class="email-section">
+        <label for="email-in">Enter your email to begin (or resume your journey)</label>
+        <input class="email-input" type="email" id="email-in" placeholder="you@school.edu"/>
+        <div class="error-msg" id="email-err">Please enter a valid email address.</div>
+        <button class="btn-primary" onclick="handleEmail()">Start My Journey →</button>
+        <p class="notice">We'll save your progress so you can return anytime.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SENT / MAGIC LINK SCREEN -->
+<div class="screen" id="screen-sent">
+  <div class="sent-card">
+    <div class="sent-icon">✉️</div>
+    <h2>Check your email!</h2>
+    <p style="margin-bottom:16px">We sent a magic link to <span class="sent-email" id="sent-email-display"></span> — click it anytime to return to your workbook from any device.</p>
+    <div class="divider">— also save your link —</div>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:10px;line-height:1.6">Bookmark this personal link as a backup:</p>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <input id="magic-link-display" type="text" readonly style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);outline:none"/>
+      <button id="copy-btn" onclick="copyMagicLink()" style="padding:10px 16px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap">Copy</button>
+    </div>
+    <button class="btn-primary" style="margin-top:0" onclick="goToDashboard()">Continue to my workbook →</button>
+    <p class="notice" style="margin-top:12px">Your progress saves automatically after each step.</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="screen" id="screen-dashboard">
+  <div class="dashboard">
+    <div class="user-bar">
+      <div><span>Signed in as</span><br><strong id="dash-email"></strong></div>
+      <button class="btn-secondary" style="padding:8px 16px;font-size:12px" onclick="signOut()">Sign out</button>
+    </div>
+    <div class="progress-card">
+      <h3>Your Progress</h3>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-label" id="progress-label">0 of 6 steps completed</div>
+    </div>
+    <div class="steps-grid" id="steps-grid"></div>
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="screen" id="screen-step1">
+  <div class="q-container">
+    <div class="q-header">
+      <h2>Step 1 — Self-Reflection</h2>
+      <p>Take your time with each section. Your answers are saved when you click "Save & Continue."</p>
+    </div>
+    <div id="review-area-s1"></div>
+    <div class="section-block">
+      <div class="section-title"><span>A</span> Strengths</div>
+      <div class="q-item"><div class="q-label">What instructional practices currently feel most successful for you?</div><textarea class="q-input" id="q-s1" placeholder="Share your thoughts..."></textarea></div>
+      <div class="q-item"><div class="q-label">What aspects of teaching bring you the most confidence?</div><textarea class="q-input" id="q-s2" placeholder="Share your thoughts..."></textarea></div>
+      <div class="q-item"><div class="q-label">What professional strengths do colleagues or students often recognize in you?</div><textarea class="q-input" id="q-s3" placeholder="Share your thoughts..."></textarea></div>
+      <div class="q-item"><div class="q-label">What practices would you like to continue strengthening?</div><textarea class="q-input" id="q-s4" placeholder="Share your thoughts..."></textarea></div>
+    </div>
+    <div class="section-block">
+      <div class="section-title"><span>B</span> Areas for Growth</div>
+      <div class="q-item"><div class="q-label">What instructional challenges are you currently experiencing?</div><textarea class="q-input" id="q-g1" placeholder="Share your thoughts..."></textarea></div>
+      <div class="q-item"><div class="q-label">What areas of professional growth are most important to you this year?</div><textarea class="q-input" id="q-g2" placeholder="Share your thoughts..."></textarea></div>
+      <div class="q-item"><div class="q-label">What support would help you grow in these areas?</div><textarea class="q-input" id="q-g3" placeholder="Share your thoughts..."></textarea></div>
+    </div>
+    <div class="section-block">
+      <div class="section-title"><span>C</span> Professional Interests</div>
+      <div class="q-label" style="margin-bottom:10px">Select all areas that interest you:</div>
+      <div class="checkbox-grid" id="interests-grid">
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Technology Integration">Technology Integration</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Student Engagement">Student Engagement</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Multilingual Learners">Multilingual Learners</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Assessment">Assessment</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Classroom Management">Classroom Management</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Student Agency">Student Agency</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Collaboration">Collaboration</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Literacy">Literacy</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="SEL">SEL</label>
+        <label class="cb-item" onclick="toggleCb(this,event)"><input type="checkbox" value="Other">Other</label>
+      </div>
+      <input class="other-input" id="other-interest" placeholder="If Other, please specify..." style="display:none"/>
+    </div>
+    <div class="section-block">
+      <div class="section-title"><span>D</span> Preferred Professional Learning Experiences</div>
+      <div class="q-label" style="margin-bottom:4px">Which professional learning experiences are most meaningful to you?</div>
+      <div class="rating-legend"><span>1 = not meaningful</span><span>5 = very meaningful</span></div>
+      <div class="rating-item"><div class="rating-label">Collaborative discussion</div><div class="rating-stars" data-key="collaborative"></div></div>
+      <div class="rating-item"><div class="rating-label">Observation / modeling</div><div class="rating-stars" data-key="observation"></div></div>
+      <div class="rating-item"><div class="rating-label">Independent reflection</div><div class="rating-stars" data-key="reflection"></div></div>
+      <div class="rating-item"><div class="rating-label">Videos / demonstrations</div><div class="rating-stars" data-key="videos"></div></div>
+      <div class="rating-item"><div class="rating-label">Hands-on workshops</div><div class="rating-stars" data-key="workshops"></div></div>
+      <div class="rating-item"><div class="rating-label">Coaching / feedback</div><div class="rating-stars" data-key="coaching"></div></div>
+      <div class="rating-item"><div class="rating-label">Reading / research</div><div class="rating-stars" data-key="reading"></div></div>
+      <div class="rating-item"><div class="rating-label">Self-paced exploration</div><div class="rating-stars" data-key="selfpaced"></div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="showScreen('screen-dashboard')">← Dashboard</button>
+      <button class="btn-save" onclick="saveStep1()">Save & Continue →</button>
+    </div>
+    <p class="notice" style="margin-bottom:2rem">Your answers are saved to this device. Use your magic link to access from any device.</p>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="screen" id="screen-step2">
+  <div class="q-container">
+    <div class="q-header">
+      <h2>Step 2 — SMART Goals</h2>
+      <p>Set meaningful professional goals aligned with your strengths, interests, and growth areas.</p>
+    </div>
+    <div id="review-area-s2"></div>
+    <div class="intro-card">
+      <h3>Why goal setting matters</h3>
+      <p>Professional goals help transform reflection into action. Rather than focusing on completing professional development requirements, meaningful goals encourage educators to identify areas that support student learning, professional confidence, and long-term growth.</p>
+      <div class="consider-box" style="margin-bottom:0">
+        <p>Things to consider before you write</p>
+        <ul>
+          <li>What professional growth area feels most meaningful to you right now?</li>
+          <li>What challenges or opportunities emerged during your self-reflection?</li>
+          <li>What changes would positively impact your students, classroom, or professional practice?</li>
+          <li>What goals feel both meaningful and realistic for this school year?</li>
+        </ul>
+      </div>
+    </div>
+    <div id="goals-container"></div>
+    <button class="btn-add-goal" onclick="addGoal()">+ Add another goal</button>
+    <div class="btn-row">
+      <button class="btn-back" onclick="showScreen('screen-dashboard')">← Dashboard</button>
+      <button class="btn-save" onclick="saveStep2()">Save & Continue →</button>
+    </div>
+    <p class="notice" style="margin-bottom:2rem">Your answers are saved to this device. Use your magic link to access from any device.</p>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="screen" id="screen-step3">
+  <div class="q-container">
+    <div class="q-header">
+      <h2>Step 3 — Learning Pathways</h2>
+      <p>Select the learning experiences that will best support your professional goal this year.</p>
+    </div>
+    <div id="review-area-s3"></div>
+    <div class="intro-card">
+      <h3>Meaningful professional growth often includes multiple learning experiences, collaboration opportunities, and ongoing reflection.</h3>
+      <p>In Step 1, you reflected on the types of professional learning experiences that feel most meaningful and effective for you. Your ratings are shown on each pathway below. Consider which experiences may best support your professional goal this year.</p>
+      <p style="font-size:13px;font-style:italic;color:var(--green-dark);font-weight:700">Professional growth is rarely supported by a single learning experience. Consider which combination of pathways will best support your professional goal and learning needs.</p>
+    </div>
+    <div class="section-block">
+      <div class="section-title"><span>A</span> Select & Plan Your Learning Pathways</div>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:1rem;line-height:1.5">Check each pathway you plan to pursue this year. Your Step 1 rating is shown on each card. For each pathway you select, describe how you will engage with it.</p>
+      <div id="pathways-container"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-title"><span>B</span> My Learning Plan</div>
+      <div class="q-item">
+        <div class="q-label">Which combination of pathways will best support your SMART goal? How do these pathways connect to your professional growth needs?</div>
+        <textarea class="q-input" id="q-s3-plan" placeholder="Reflect on how your chosen pathways work together to support your goal..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="showScreen('screen-dashboard')">← Dashboard</button>
+      <button class="btn-save" onclick="saveStep3()">Save & Continue →</button>
+    </div>
+    <p class="notice" style="margin-bottom:2rem">Your answers are saved to this device. Use your magic link to access from any device.</p>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="screen" id="screen-step4">
+  <div class="q-container">
+    <div class="q-header">
+      <h2>Step 4 — Apply Your Learning</h2>
+      <p>Professional growth becomes meaningful when learning is implemented, reflected upon, and refined in practice.</p>
+    </div>
+    <div id="review-area-s4"></div>
+
+    <!-- Section A: From Learning to Action -->
+    <div class="section-block">
+      <div class="section-title"><span>A</span> From Learning to Action</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">Professional learning should lead to meaningful changes in practice. Consider how the learning pathways you selected may support instructional decisions, student engagement, collaboration, or professional growth throughout the year.</p>
+      <div class="q-item">
+        <div class="q-label">What strategies or practices are you hoping to implement?</div>
+        <textarea class="q-input" id="q-s4-a1" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What is one realistic first step you could take?</div>
+        <textarea class="q-input" id="q-s4-a2" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">How might implementation impact students or colleagues?</div>
+        <textarea class="q-input" id="q-s4-a3" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What barriers or challenges might arise?</div>
+        <textarea class="q-input" id="q-s4-a4" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What support or resources may help you succeed?</div>
+        <textarea class="q-input" id="q-s4-a5" placeholder="Share your thoughts..."></textarea>
+      </div>
+    </div>
+
+    <!-- Section B: Implementation Ideas (personalized from Step 3) -->
+    <div class="section-block">
+      <div class="section-title"><span>B</span> Implementation Ideas</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">Based on the learning pathways you selected in Step 3, consider how you might apply each one in practice. For each pathway below, describe your specific implementation plan.</p>
+      <div id="impl-container">
+        <p style="font-size:13px;color:var(--gray);font-style:italic">Complete Step 3 first to see your personalized pathways here.</p>
+      </div>
+    </div>
+
+    <!-- Section C: Start Small / Build Momentum -->
+    <div class="section-block">
+      <div class="section-title"><span>C</span> Start Small — Build Momentum</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:4px">Sustained professional growth often occurs through small, intentional changes over time. Rather than attempting to implement everything at once, focus on manageable steps that support consistency, reflection, and ongoing improvement.</p>
+      <p style="font-size:13px;color:var(--navy);font-weight:700;line-height:1.6;margin-bottom:1rem">Implementation becomes more meaningful when educators reflect on outcomes, monitor progress, and consider the impact on students, instruction, or professional practice.</p>
+      <div class="q-item">
+        <div class="q-label">What evidence could demonstrate growth or progress?</div>
+        <textarea class="q-input" id="q-s4-c1" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What student outcomes or behaviors might change?</div>
+        <textarea class="q-input" id="q-s4-c2" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">How will you reflect on implementation throughout the year?</div>
+        <textarea class="q-input" id="q-s4-c3" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">How will you know if adjustments are needed?</div>
+        <textarea class="q-input" id="q-s4-c4" placeholder="Share your thoughts..."></textarea>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="showScreen('screen-dashboard')">← Dashboard</button>
+      <button class="btn-save" onclick="saveStep4()">Save & Continue →</button>
+    </div>
+    <p class="notice" style="margin-bottom:2rem">Your answers are saved to this device. Use your magic link to access from any device.</p>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="screen" id="screen-step5">
+  <div class="q-container">
+    <div class="q-header">
+      <h2>Step 5 — Track Your Growth 🌻</h2>
+      <p>Growth does not happen all at once. Taking time to reflect on progress can help you recognize successes, identify challenges, and make thoughtful adjustments throughout the year.</p>
+    </div>
+    <div id="review-area-s5"></div>
+
+    <!-- Section A: Revisit & Update Your SMART Goals -->
+    <div class="section-block">
+      <div class="section-title"><span>A</span> Revisit & Update Your SMART Goals</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">Your goals from Step 2 are shown below. Based on your experience so far, you can update, refine, or add notes to each goal. Growth often means adjusting your goals as you learn more.</p>
+      <div id="goals-review-container">
+        <p style="font-size:13px;color:var(--gray);font-style:italic">Complete Step 2 first to see your goals here.</p>
+      </div>
+    </div>
+
+    <!-- Section B: Track Your Growth -->
+    <div class="section-block">
+      <div class="section-title"><span>B</span> Track Your Growth</div>
+      <div class="q-item">
+        <div class="q-label">What progress have you noticed so far?</div>
+        <textarea class="q-input" id="q-s5-b1" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What instructional changes have been most successful?</div>
+        <textarea class="q-input" id="q-s5-b2" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What challenges are still present?</div>
+        <textarea class="q-input" id="q-s5-b3" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What adjustments may help support continued growth?</div>
+        <textarea class="q-input" id="q-s5-b4" placeholder="Share your thoughts..."></textarea>
+      </div>
+    </div>
+
+    <!-- Section C: Celebrate! -->
+    <div class="section-block" style="border-color:#F1C40F;border-width:2px">
+      <div class="section-title" style="border-bottom-color:#FEF9E7">
+        <span style="background:#F1C40F;color:var(--navy)">C</span>
+        <span style="color:#B7950B">Celebrate Your Growth 🎉</span>
+      </div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">Professional growth is not about perfection. Even small changes in practice can create meaningful impact over time. Recognizing progress helps sustain motivation and supports continued learning.</p>
+      <div class="q-item">
+        <div class="q-label">What accomplishments are you most proud of?</div>
+        <textarea class="q-input" id="q-s5-c1" placeholder="Take a moment to celebrate — what have you achieved?"></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What positive changes have you observed in your students, classroom, or practice?</div>
+        <textarea class="q-input" id="q-s5-c2" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What would you like to continue improving?</div>
+        <textarea class="q-input" id="q-s5-c3" placeholder="Share your thoughts..."></textarea>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="showScreen('screen-dashboard')">← Dashboard</button>
+      <button class="btn-save" onclick="saveStep5()">Save & Continue →</button>
+    </div>
+    <p class="notice" style="margin-bottom:2rem">Your answers are saved to this device. Use your magic link to access from any device.</p>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="screen" id="screen-step6">
+  <div class="q-container">
+    <div class="q-header">
+      <h2>Step 6 — Collaborate & Lead ✨</h2>
+      <p>This is your space to look back across the year, reflect freely, and think about how to share your growth with others.</p>
+    </div>
+    <div id="review-area-s6"></div>
+
+    <!-- Section A: Year-End Reflection -->
+    <div class="section-block">
+      <div class="section-title"><span>A</span> Year-End Reflection</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">Look back across your entire professional learning journey this year. These prompts are here to guide you — answer as many or as few as feel meaningful.</p>
+      <div class="q-item">
+        <div class="q-label">What is the most significant professional growth you experienced this year?</div>
+        <textarea class="q-input" id="q-s6-a1" placeholder="Reflect on your biggest shifts, insights, or breakthroughs..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What surprised you most about your learning journey?</div>
+        <textarea class="q-input" id="q-s6-a2" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">How has your professional practice changed as a result of this work?</div>
+        <textarea class="q-input" id="q-s6-a3" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What would you do differently if you were starting this journey again?</div>
+        <textarea class="q-input" id="q-s6-a4" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <div class="q-item">
+        <div class="q-label">What goals or questions are you carrying into next year?</div>
+        <textarea class="q-input" id="q-s6-a5" placeholder="Share your thoughts..."></textarea>
+      </div>
+    </div>
+
+    <!-- Section B: Free Reflection Space -->
+    <div class="section-block" style="border-color:var(--green);border-width:2px">
+      <div class="section-title">
+        <span>B</span> Your Free Reflection Space
+      </div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">This space is entirely yours. Write whatever feels most important — a letter to yourself, a narrative of your year, a list of moments that mattered, or anything else. There are no prompts here, just space.</p>
+      <textarea class="q-input" id="q-s6-free" style="min-height:200px" placeholder="Write freely here..."></textarea>
+    </div>
+
+    <!-- Section C: Share Your Learning -->
+    <div class="section-block">
+      <div class="section-title"><span>C</span> Share Your Learning with Others</div>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:1rem">Professional growth becomes even more powerful when it is shared. Collaboration, mentorship, and knowledge-sharing strengthen school communities and support collective learning. Consider which of these feel like a natural fit for you:</p>
+      <div class="sharing-grid">
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Present at a PLC or staff meeting">
+          <div class="sharing-icon">🗣️</div>
+          <div class="sharing-label">Present at a PLC or staff meeting</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Mentor or support a colleague">
+          <div class="sharing-icon">🤝</div>
+          <div class="sharing-label">Mentor or support a colleague</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Write a reflection or blog post">
+          <div class="sharing-icon">✍️</div>
+          <div class="sharing-label">Write a reflection or blog post</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Share with your administrator">
+          <div class="sharing-icon">📋</div>
+          <div class="sharing-label">Share with your administrator</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Create a resource or lesson to share">
+          <div class="sharing-icon">📚</div>
+          <div class="sharing-label">Create a resource or lesson to share</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Lead a workshop or professional development">
+          <div class="sharing-icon">🎓</div>
+          <div class="sharing-label">Lead a workshop or PD session</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Share on social media or professional networks">
+          <div class="sharing-icon">💬</div>
+          <div class="sharing-label">Share on social or professional networks</div>
+        </div>
+        <div class="sharing-idea" onclick="toggleShare(this)" data-val="Collaborate on a future learning goal with a colleague">
+          <div class="sharing-icon">🌱</div>
+          <div class="sharing-label">Collaborate on a future goal with a colleague</div>
+        </div>
+      </div>
+      <div class="q-item" style="margin-top:1rem">
+        <div class="q-label">How do you plan to share or apply your learning? What is one concrete next step?</div>
+        <textarea class="q-input" id="q-s6-share" placeholder="Describe how you'll share your growth and what that might look like in practice..."></textarea>
+      </div>
+    </div>
+
+    <!-- Completion message -->
+    <div style="background:var(--green);color:white;border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1rem">
+      <div style="font-size:32px;margin-bottom:8px">🎉</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:6px">You've completed your Professional Learning Workbook!</div>
+      <div style="font-size:13px;opacity:0.9;line-height:1.6">Your reflections, goals, and plans are saved. You can return to any step at any time to revisit or revise your thinking throughout the year.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="showScreen('screen-dashboard')">← Dashboard</button>
+      <button class="btn-save" onclick="saveStep6()">Save & Finish ✓</button>
+    </div>
+    <p class="notice" style="margin-bottom:2rem">Your answers are saved to this device. Use your magic link to access from any device.</p>
+  </div>
+</div>
+
+<script>
+const STEPS=[
+  {id:1,title:'Self-Reflection',desc:'Strengths, growth areas & learning preferences',screen:'screen-step1'},
+  {id:2,title:'SMART Goals',desc:'Set meaningful professional goals for the year',screen:'screen-step2'},
+  {id:3,title:'Learning Pathways',desc:'Select & plan experiences that support your goal',screen:'screen-step3'},
+  {id:4,title:'Apply Your Learning',desc:'Implement strategies and monitor your practice',screen:'screen-step4'},
+  {id:5,title:'Track Your Growth',desc:'Revisit goals, celebrate progress & reflect',screen:'screen-step5'},
+  {id:6,title:'Collaborate & Lead',desc:'Reflect, share your learning & finish strong',screen:'screen-step6'},
+];
+
+const SMART_DEFS=[
+  {key:'s',label:'S — Specific',cls:'smart-s',
+   desc:'Specific goals clearly identify the focus of professional growth. Narrowing the focus helps make goals more meaningful and actionable.',
+   prompts:['What specific area of professional practice do you want to improve?','What instructional challenge or opportunity are you focusing on?','Who will benefit from this goal?'],
+   placeholder:'Describe specifically what you want to achieve...'},
+  {key:'m',label:'M — Measurable',cls:'smart-m',
+   desc:'Measurable goals include ways to monitor progress and identify evidence of growth throughout the year.',
+   prompts:['How will you know progress is occurring?','What evidence could demonstrate growth?','What changes might you observe in students or professional practice?'],
+   placeholder:'How will you measure your progress?'},
+  {key:'a',label:'A — Achievable',cls:'smart-a',
+   desc:'Achievable goals are realistic, manageable, and appropriate within the available time and resources.',
+   prompts:['Is this goal realistic for the current school year?','What supports or resources may help you succeed?','What small steps could help you make progress?'],
+   placeholder:'Why is this goal realistic and achievable?'},
+  {key:'r',label:'R — Relevant',cls:'smart-r',
+   desc:'Relevant goals connect to student needs, professional interests, and organizational priorities.',
+   prompts:['Why is this goal meaningful to you?','How does this goal support students or school improvement?','How does this goal connect to your professional interests?','How does this goal align to broader needs of the district, school, students, or community?'],
+   placeholder:'Why does this goal matter to you and your students?'},
+  {key:'t',label:'T — Time Bound',cls:'smart-t',
+   desc:'Time-bound goals include a realistic timeline for implementation, reflection, and progress monitoring.',
+   prompts:['What is your timeline for implementation?','When will you revisit or reflect on progress?','What checkpoints could help you stay accountable?'],
+   placeholder:'What is your timeline for this goal?'},
+];
+
+const ratings={};
+let currentUser=null;
+let currentToken=null;
+let goalCount=0;
+
+/* ---- CONFIG ---- */
+const SUPABASE_URL='https://ghgaffryylcemuofgjuq.supabase.co';
+const SUPABASE_KEY='sb_publishable_KIjoUfNi-TELgar9vZPF9A_yfD1GA9j';
+const RESEND_KEY='re_jekaTD8j_NYzA4J7EguV6vpE8bci4zz3k';
+
+/* ---- SUPABASE HELPERS ---- */
+async function dbGet(email){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/responses?email=eq.${encodeURIComponent(email)}&select=*`,{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  });
+  const rows=await r.json();
+  return rows&&rows.length>0?rows[0]:null;
+}
+
+async function dbUpsert(email,token,data){
+  await fetch(`${SUPABASE_URL}/rest/v1/responses`,{
+    method:'POST',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+      'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({email,token,data,updated_at:new Date().toISOString()})
+  });
+}
+
+async function dbUpdateData(email,data){
+  await fetch(`${SUPABASE_URL}/rest/v1/responses?email=eq.${encodeURIComponent(email)}`,{
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({data,updated_at:new Date().toISOString()})
+  });
+}
+
+async function dbGetByToken(token){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/responses?token=eq.${encodeURIComponent(token)}&select=*`,{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  });
+  const rows=await r.json();
+  return rows&&rows.length>0?rows[0]:null;
+}
+
+function genToken(){
+  return Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+}
+
+async function sendMagicLink(email,token){
+  const link=window.location.href.split('?')[0]+'?token='+token;
+  await fetch('/.netlify/functions/send-email',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email,link})
+  });
+  return link;
+}
+
+/* ---- LOCAL FALLBACK ---- */
+function getLocal(){try{return JSON.parse(localStorage.getItem('plw_data')||'{}')}catch{return{}}}
+function saveLocal(d){try{localStorage.setItem('plw_data',JSON.stringify(d))}catch{}}
+
+function getData(){
+  const local=getLocal();
+  return local[currentUser]||{completedSteps:[]};
+}
+
+async function saveData(stepKey,stepData){
+  const local=getLocal();
+  if(!local[currentUser])local[currentUser]={completedSteps:[]};
+  if(stepKey){
+    local[currentUser][stepKey]=stepData;
+    if(!local[currentUser].completedSteps.includes(parseInt(stepKey.replace('step',''))))
+      local[currentUser].completedSteps.push(parseInt(stepKey.replace('step','')));
+  }
+  saveLocal(local);
+  // Also save to Supabase
+  try{await dbUpdateData(currentUser,local[currentUser]);}catch(e){console.warn('Cloud save failed',e);}
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ---- CHECK FOR TOKEN IN URL ON LOAD ---- */
+window.addEventListener('DOMContentLoaded',async()=>{
+  const params=new URLSearchParams(window.location.search);
+  const token=params.get('token');
+  if(token){
+    showScreen('screen-loading');
+    try{
+      const row=await dbGetByToken(token);
+      if(row){
+        currentUser=row.email;
+        currentToken=token;
+        // Sync cloud data to local
+        const local=getLocal();
+        local[currentUser]=row.data||{completedSteps:[]};
+        saveLocal(local);
+        document.getElementById('dash-email').textContent=currentUser;
+        renderDashboard();
+        showScreen('screen-dashboard');
+      } else {
+        showScreen('screen-welcome');
+      }
+    }catch(e){showScreen('screen-welcome');}
+  }
+});
+
+async function handleEmail(){
+  const email=document.getElementById('email-in').value.trim();
+  const err=document.getElementById('email-err');
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.style.display='block';return}
+  err.style.display='none';
+  const btn=document.querySelector('#screen-welcome .btn-primary');
+  btn.textContent='Sending…';btn.disabled=true;
+  try{
+    let row=await dbGet(email);
+    let token;
+    if(row){
+      token=row.token;
+      const local=getLocal();
+      local[email]=row.data||{completedSteps:[]};
+      saveLocal(local);
+    } else {
+      token=genToken();
+      await dbUpsert(email,token,{completedSteps:[]});
+    }
+    currentUser=email;
+    currentToken=token;
+    const link=await sendMagicLink(email,token);
+    document.getElementById('sent-email-display').textContent=email;
+    document.getElementById('magic-link-display').value=link;
+    showScreen('screen-sent');
+  }catch(e){
+    console.error(e);
+    currentUser=email;
+    const local=getLocal();
+    if(!local[email])local[email]={completedSteps:[]};
+    saveLocal(local);
+    document.getElementById('dash-email').textContent=email;
+    renderDashboard();
+    showScreen('screen-dashboard');
+  }
+  btn.textContent='Start My Journey →';btn.disabled=false;
+}
+
+function copyMagicLink(){
+  const input=document.getElementById('magic-link-display');
+  input.select();
+  document.execCommand('copy');
+  const btn=document.getElementById('copy-btn');
+  btn.textContent='Copied! ✓';
+  setTimeout(()=>btn.textContent='Copy my link',2000);
+}
+
+function goToDashboard(){
+  if(!currentUser)currentUser=document.getElementById('email-in').value.trim();
+  document.getElementById('dash-email').textContent=currentUser;
+  renderDashboard();
+  showScreen('screen-dashboard');
+}
+
+function signOut(){
+  currentUser=null;currentToken=null;
+  document.getElementById('email-in').value='';
+  // Remove token from URL
+  window.history.replaceState({},'',window.location.pathname);
+  showScreen('screen-welcome');
+}
+
+function renderDashboard(){
+  const user=getData();
+  const completed=user.completedSteps||[];
+  const pct=Math.round((completed.length/6)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-label').textContent=completed.length+' of 6 steps completed';
+  const grid=document.getElementById('steps-grid');
+  grid.innerHTML='';
+  STEPS.forEach(step=>{
+    const done=completed.includes(step.id);
+    const card=document.createElement('div');
+    card.className='step-card'+(done?' completed':'');
+    card.innerHTML=`
+      <div class="step-num">${done?'✓':step.id}</div>
+      <div class="step-info"><h4>${step.title}</h4><p>${step.desc}</p></div>
+      <span class="step-badge ${done?'badge-done':'badge-start'}">${done?'Revisit':'Start'}</span>
+    `;
+    card.onclick=()=>openStep(step);
+    grid.appendChild(card);
+  });
+}
+
+function openStep(step){
+  if(step.id===1)loadStep1();
+  else if(step.id===2)loadStep2();
+  else if(step.id===3)loadStep3();
+  else if(step.id===4)loadStep4();
+  else if(step.id===5)loadStep5();
+  else if(step.id===6)loadStep6();
+  showScreen(step.screen);
+}
+
+/* ---- STEP 1 ---- */
+function loadStep1(){
+  const user=getData();
+  const prev=user.step1||null;
+  const ra=document.getElementById('review-area-s1');
+  ra.innerHTML='';
+  if(prev){
+    ra.innerHTML=`<div class="review-block"><h3>📋 Your previous answers — Step 1</h3>
+      <div class="review-answer"><div class="review-q">Most successful practices:</div><div class="review-a">${prev.s1||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Confidence & success:</div><div class="review-a">${prev.s2||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Recognized strengths:</div><div class="review-a">${prev.s3||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Practices to strengthen:</div><div class="review-a">${prev.s4||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Instructional challenges:</div><div class="review-a">${prev.g1||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Growth areas this year:</div><div class="review-a">${prev.g2||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Support needed:</div><div class="review-a">${prev.g3||'—'}</div></div>
+      <div class="review-answer"><div class="review-q">Professional interests:</div><div class="review-a">${(prev.interests||[]).join(', ')||'—'}</div></div>
+    </div>`;
+    ['s1','s2','s3','s4','g1','g2','g3'].forEach(k=>{const el=document.getElementById('q-'+k);if(el)el.value=prev[k]||'';});
+    if(prev.otherInterest){document.getElementById('other-interest').value=prev.otherInterest;document.getElementById('other-interest').style.display='block';}
+    document.querySelectorAll('#interests-grid .cb-item').forEach(el=>el.classList.remove('checked'));
+    (prev.interests||[]).forEach(v=>{document.querySelectorAll('#interests-grid .cb-item').forEach(el=>{if(el.querySelector('input').value===v)el.classList.add('checked');});});
+    Object.keys(prev.ratings||{}).forEach(key=>setRating(key,prev.ratings[key]));
+  }
+  buildStars();
+}
+
+function buildStars(){
+  document.querySelectorAll('.rating-stars').forEach(container=>{
+    const key=container.getAttribute('data-key');
+    container.innerHTML='';
+    for(let i=1;i<=5;i++){
+      const s=document.createElement('div');s.className='star';s.textContent=i;
+      s.onclick=(()=>{const v=i;return()=>setRating(key,v);})();
+      container.appendChild(s);
+    }
+  });
+}
+
+function setRating(key,val){
+  ratings[key]=val;
+  const c=document.querySelector(`.rating-stars[data-key="${key}"]`);
+  if(!c)return;
+  c.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<val));
+}
+
+function toggleCb(el,e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  el.classList.toggle('checked');
+  const hasOther=!!document.querySelector('#interests-grid .cb-item.checked input[value="Other"]');
+  document.getElementById('other-interest').style.display=hasOther?'block':'none';
+}
+
+async function saveStep1(){
+  const interests=Array.from(document.querySelectorAll('#interests-grid .cb-item.checked input')).map(i=>i.value);
+  const step1data={
+    s1:document.getElementById('q-s1').value,s2:document.getElementById('q-s2').value,
+    s3:document.getElementById('q-s3').value,s4:document.getElementById('q-s4').value,
+    g1:document.getElementById('q-g1').value,g2:document.getElementById('q-g2').value,
+    g3:document.getElementById('q-g3').value,interests,
+    otherInterest:document.getElementById('other-interest').value,
+    ratings:{...ratings},savedAt:new Date().toISOString()
+  };
+  await saveData('step1',step1data);
+  renderDashboard();showScreen('screen-dashboard');
+}
+
+/* ---- STEP 2 ---- */
+function buildGoalCard(index,data){
+  const div=document.createElement('div');
+  div.className='goal-card';
+  div.id='goal-card-'+index;
+  let smartHTML=SMART_DEFS.map(s=>`
+    <div class="smart-row">
+      <div class="smart-letter ${s.cls}">${s.key.toUpperCase()}</div>
+      <div class="smart-row-content">
+        <div class="q-label">${s.label}</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:8px;line-height:1.5">${s.desc}</div>
+        <div class="consider-box" style="margin-bottom:10px">
+          <p>Things to consider</p>
+          <ul>${s.prompts.map(p=>`<li>${p}</li>`).join('')}</ul>
+        </div>
+        <textarea class="q-input" id="goal-${index}-${s.key}" placeholder="${s.placeholder}" style="min-height:75px">${data&&data[s.key]?data[s.key]:''}</textarea>
+      </div>
+    </div>
+  `).join('');
+  div.innerHTML=`
+    <div class="goal-card-header">
+      <div class="goal-card-title">Goal ${index+1}</div>
+      ${index>0?`<button class="btn-remove-goal" onclick="removeGoal(${index})">Remove this goal</button>`:''}
+    </div>
+    ${smartHTML}
+    <div class="final-statement">
+      <label>✏️ My SMART goal statement</label>
+      <textarea class="final-input" id="goal-${index}-statement" placeholder="Write your complete SMART goal here, combining your thoughts above into one clear, actionable statement...">${data&&data.statement?data.statement:''}</textarea>
+    </div>
+  `;
+  return div;
+}
+
+function loadStep2(){
+  const user=getData();
+  const prev=user.step2||null;
+  goalCount=0;
+  const container=document.getElementById('goals-container');
+  container.innerHTML='';
+  const ra=document.getElementById('review-area-s2');
+  ra.innerHTML='';
+  if(prev&&prev.goals&&prev.goals.length>0){
+    let html=`<div class="review-block"><h3>📋 Your previous goals — Step 2</h3>`;
+    prev.goals.forEach((g,i)=>{html+=`<div class="review-answer"><div class="review-q">Goal ${i+1}:</div><div class="review-a">${g.statement||'(no statement written yet)'}</div></div>`;});
+    html+=`</div>`;
+    ra.innerHTML=html;
+    prev.goals.forEach((g,i)=>{container.appendChild(buildGoalCard(i,g));goalCount++;});
+  } else {
+    container.appendChild(buildGoalCard(0,null));
+    goalCount=1;
+  }
+}
+
+function addGoal(){
+  document.getElementById('goals-container').appendChild(buildGoalCard(goalCount,null));
+  goalCount++;
+}
+
+function removeGoal(index){
+  const card=document.getElementById('goal-card-'+index);
+  if(card)card.remove();
+}
+
+async function saveStep2(){
+  const goals=[];
+  document.querySelectorAll('.goal-card').forEach(card=>{
+    const idx=card.id.replace('goal-card-','');
+    const g={};
+    SMART_DEFS.forEach(s=>{const el=document.getElementById(`goal-${idx}-${s.key}`);if(el)g[s.key]=el.value;});
+    const st=document.getElementById(`goal-${idx}-statement`);
+    if(st)g.statement=st.value;
+    goals.push(g);
+  });
+  await saveData('step2',{goals,savedAt:new Date().toISOString()});
+  renderDashboard();showScreen('screen-dashboard');
+}
+
+/* ---- STEP 3 ---- */
+const PATHWAYS=[
+  {key:'selfpaced',title:'Self-Paced Exploration',ratingKey:'selfpaced',
+   desc:'Flexible learning opportunities allow educators to learn independently and revisit content over time.',
+   examples:['Self-paced online learning','Independent technology exploration','Online modules','Digital resource exploration'],
+   consider:'What learning opportunities would support your independent exploration and flexibility?'},
+  {key:'reading',title:'Reading / Research',ratingKey:'reading',
+   desc:'Professional reading supports deeper understanding, new perspectives, and evidence-based instructional decision making.',
+   examples:['Professional books','Journal articles','Research summaries','Instructional frameworks'],
+   consider:'What topics would you like to explore more deeply through reading or research?'},
+  {key:'collaborative',title:'Collaborative Discussion',ratingKey:'collaborative',
+   desc:'Collaborative learning experiences support professional growth through shared problem-solving, reflection, and discussion with colleagues.',
+   examples:['PLC collaboration','Lesson planning with colleagues','Analyzing student work','Peer discussion'],
+   consider:'How might collaboration help strengthen your professional practice?'},
+  {key:'observation',title:'Observing / Modeling',ratingKey:'observation',
+   desc:'Observing instructional practices can provide practical examples, strategies, and ideas for classroom implementation.',
+   examples:['Peer observations','Demonstration lessons','Lesson modeling','Instructional walkthroughs'],
+   consider:'What instructional practices could you learn by observing others?'},
+  {key:'reflection',title:'Independent Reflection',ratingKey:'reflection',
+   desc:'Reflection helps educators analyze instructional practices, monitor growth, and identify next steps.',
+   examples:['Journaling','Implementation reflection','Reviewing student work','Self-analysis'],
+   consider:'How could reflection help deepen your professional learning?'},
+  {key:'videos',title:'Visuals / Demonstrations',ratingKey:'videos',
+   desc:'Visual demonstrations provide opportunities to observe strategies, routines, and implementation.',
+   examples:['Instructional videos','Recorded model lessons','Webinars','Online demonstrations'],
+   consider:'What strategies or practices would you benefit from seeing modeled visually?'},
+  {key:'workshops',title:'Professional Workshops',ratingKey:'workshops',
+   desc:'Hands-on experiences encourage active learning, experimentation, and immediate application.',
+   examples:['Workshops','Simulations','Strategy practice','Collaborative activities'],
+   consider:'What professional learning experiences would help you actively practice new skills?'},
+  {key:'coaching',title:'Coaching / Feedback',ratingKey:'coaching',
+   desc:'Feedback and individualized support can strengthen implementation and professional growth.',
+   examples:['Instructional coaching','Peer feedback','Mentoring','Collaborative debriefing'],
+   consider:'What types of feedback or support would help you grow?'},
+];
+
+function ratingLabel(val){
+  if(!val||val===0)return'Not rated in Step 1';
+  return['','Not meaningful','Slightly meaningful','Somewhat meaningful','Very meaningful','Most meaningful'][val]||'';
+}
+
+function loadStep3(){
+  const user=getData();
+  const step1=user.step1||{};
+  const step2=user.step2||{};
+  const prev=user.step3||null;
+  const ra=document.getElementById('review-area-s3');
+  ra.innerHTML='';
+  let recallHTML='<div class="s1-recall">📋 <strong>Your Step 2 goal(s) — keep these in mind as you plan your pathways:</strong>';
+  if(step2.goals&&step2.goals.length>0){
+    step2.goals.forEach((g,i)=>{if(g.statement)recallHTML+=`<br><strong>Goal ${i+1}:</strong> ${g.statement}`;});
+  } else {
+    recallHTML+='<br><em>No goals saved yet — consider completing Step 2 first.</em>';
+  }
+  recallHTML+='</div>';
+  ra.innerHTML=recallHTML;
+  const container=document.getElementById('pathways-container');
+  container.innerHTML='';
+  PATHWAYS.forEach(p=>{
+    const s1rating=(step1.ratings&&step1.ratings[p.ratingKey])||0;
+    const prevData=prev&&prev.pathways&&prev.pathways[p.key]||null;
+    const isSelected=prevData&&prevData.selected;
+    const planText=prevData&&prevData.plan||'';
+    const dots=Array.from({length:5},(_,i)=>`<div class="pathway-dot ${i<s1rating?'filled':''}"></div>`).join('');
+    const card=document.createElement('div');
+    card.className='pathway-card'+(isSelected?' selected':'');
+    card.id='pathway-'+p.key;
+    card.innerHTML=`
+      <div class="pathway-header" onclick="togglePathway('${p.key}')">
+        <div class="pathway-check">${isSelected?'✓':''}</div>
+        <div class="pathway-title">${p.title}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+          <div class="pathway-rating">${dots}</div>
+          <div style="font-size:10px;color:var(--gray)">${s1rating>0?s1rating+'/5 in Step 1':'not rated'}</div>
+        </div>
+      </div>
+      <div class="pathway-body">
+        <div class="pathway-desc">${p.desc}</div>
+        <div class="pathway-examples"><strong>Examples</strong><ul>${p.examples.map(e=>`<li>${e}</li>`).join('')}</ul></div>
+        <div class="pathway-consider">💭 Consider: ${p.consider}</div>
+        <div class="pathway-plan-label">How will you engage with this pathway? What specific steps will you take?</div>
+        <textarea class="pathway-plan-input" id="plan-${p.key}" placeholder="Describe your plan for this learning pathway...">${planText}</textarea>
+      </div>`;
+    container.appendChild(card);
+  });
+  if(prev&&prev.overallPlan)document.getElementById('q-s3-plan').value=prev.overallPlan;
+  else document.getElementById('q-s3-plan').value='';
+}
+
+function togglePathway(key){
+  const card=document.getElementById('pathway-'+key);
+  const check=card.querySelector('.pathway-check');
+  const isSelected=card.classList.toggle('selected');
+  check.textContent=isSelected?'✓':'';
+}
+
+async function saveStep3(){
+  const pathways={};
+  PATHWAYS.forEach(p=>{
+    const card=document.getElementById('pathway-'+p.key);
+    const selected=card&&card.classList.contains('selected');
+    const plan=(document.getElementById('plan-'+p.key)||{}).value||'';
+    pathways[p.key]={selected,plan};
+  });
+  const overallPlan=document.getElementById('q-s3-plan').value||'';
+  await saveData('step3',{pathways,overallPlan,savedAt:new Date().toISOString()});
+  renderDashboard();showScreen('screen-dashboard');
+}
+
+/* ---- STEP 4 ---- */
+const PATHWAY_APPLICATIONS={
+  selfpaced:'Engage in self-paced online learning or independent resource exploration',
+  reading:'Apply a new instructional framework or strategy from professional reading',
+  collaborative:'Co-plan lessons with colleagues or analyze student work together',
+  observation:'Implement an instructional strategy observed during modeling or walkthroughs',
+  reflection:'Monitor effectiveness of practice and adjust based on self-analysis',
+  videos:'Apply strategies or routines seen in instructional videos or demonstrations',
+  workshops:'Test a strategy or skill practiced during a hands-on workshop',
+  coaching:'Revise and refine practice based on coaching or peer feedback',
+};
+
+function loadStep4(){
+  const user=getData();
+  const step2=user.step2||{};
+  const step3=user.step3||{};
+  const prev=user.step4||null;
+
+  const ra=document.getElementById('review-area-s4');
+  ra.innerHTML='';
+  if(step2.goals&&step2.goals.length>0){
+    let html='<div class="s1-recall">📋 <strong>Your SMART goal(s) from Step 2 — keep these in mind as you plan implementation:</strong>';
+    step2.goals.forEach((g,i)=>{if(g.statement)html+=`<br><strong>Goal ${i+1}:</strong> ${g.statement}`;});
+    html+='</div>';
+    ra.innerHTML=html;
+  }
+
+  ['a1','a2','a3','a4','a5','c1','c2','c3','c4'].forEach(k=>{
+    const el=document.getElementById('q-s4-'+k);
+    if(el)el.value=(prev&&prev[k])||'';
+  });
+
+  const implContainer=document.getElementById('impl-container');
+  implContainer.innerHTML='';
+  const selected=step3.pathways?Object.entries(step3.pathways).filter(([,v])=>v.selected):[];
+  if(selected.length===0){
+    implContainer.innerHTML='<p style="font-size:13px;color:var(--gray);font-style:italic">Complete Step 3 and select your learning pathways to see personalized implementation ideas here.</p>';
+  } else {
+    selected.forEach(([key,data])=>{
+      const pathway=PATHWAYS.find(p=>p.key===key);
+      if(!pathway)return;
+      const savedImpl=prev&&prev.impl&&prev.impl[key]||'';
+      const card=document.createElement('div');
+      card.className='impl-card';
+      card.innerHTML=`
+        <div class="impl-card-title">${pathway.title}</div>
+        <div class="impl-card-app">💡 Possible application: ${PATHWAY_APPLICATIONS[key]||''}</div>
+        ${data.plan?`<div style="font-size:12px;color:var(--gray);margin-bottom:6px;font-style:italic">Your Step 3 plan: "${data.plan}"</div>`:''}
+        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:8px">How will you apply this pathway in your practice?</div>
+        <textarea id="impl-${key}" placeholder="Describe your specific implementation steps...">${savedImpl}</textarea>
+      `;
+      implContainer.appendChild(card);
+    });
+  }
+}
+
+async function saveStep4(){
+  const user=getData();
+  const step3=user.step3||{};
+  const selected=step3.pathways?Object.entries(step3.pathways).filter(([,v])=>v.selected):[];
+  const impl={};
+  selected.forEach(([key])=>{const el=document.getElementById('impl-'+key);if(el)impl[key]=el.value;});
+  const data={impl,savedAt:new Date().toISOString()};
+  ['a1','a2','a3','a4','a5','c1','c2','c3','c4'].forEach(k=>{
+    const el=document.getElementById('q-s4-'+k);
+    if(el)data[k]=el.value;
+  });
+  await saveData('step4',data);
+  renderDashboard();showScreen('screen-dashboard');
+}
+
+/* ---- STEP 5 ---- */
+function loadStep5(){
+  const user=getData();
+  const step2=user.step2||{};
+  const prev=user.step5||null;
+  const container=document.getElementById('goals-review-container');
+  container.innerHTML='';
+  if(step2.goals&&step2.goals.length>0){
+    step2.goals.forEach((g,i)=>{
+      const updatedStatement=prev&&prev.goalUpdates&&prev.goalUpdates[i]&&prev.goalUpdates[i].statement!==undefined
+        ?prev.goalUpdates[i].statement:g.statement||'';
+      const updatedNotes=prev&&prev.goalUpdates&&prev.goalUpdates[i]?prev.goalUpdates[i].notes||'':'';
+      const card=document.createElement('div');
+      card.style.cssText='background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem';
+      card.innerHTML=`
+        <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:6px">Goal ${i+1}</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:4px;font-weight:600">Original goal statement (Step 2):</div>
+        <div style="font-size:13px;color:var(--navy);background:white;padding:8px 12px;border-radius:6px;margin-bottom:10px;line-height:1.5;border:1px solid var(--border)">${g.statement||'<em style="color:var(--gray)">No statement written</em>'}</div>
+        <div style="font-size:12px;font-weight:800;color:var(--green-dark);margin-bottom:6px">Update or refine your goal statement (optional):</div>
+        <textarea style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;resize:vertical;min-height:70px;outline:none;color:var(--navy);line-height:1.5;margin-bottom:8px" id="goal-update-${i}" placeholder="Leave as-is, or refine your goal based on what you've learned...">${updatedStatement}</textarea>
+        <div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:6px">Progress notes — how is this goal going?</div>
+        <textarea style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;resize:vertical;min-height:70px;outline:none;color:var(--navy);line-height:1.5" id="goal-notes-${i}" placeholder="Reflect on what's working, what's changed, and what's next for this goal...">${updatedNotes}</textarea>
+      `;
+      container.appendChild(card);
+    });
+  } else {
+    container.innerHTML='<p style="font-size:13px;color:var(--gray);font-style:italic">Complete Step 2 to set your SMART goals first — they\'ll appear here for review and updating.</p>';
+  }
+
+  // Restore reflection fields
+  ['b1','b2','b3','b4','c1','c2','c3'].forEach(k=>{
+    const el=document.getElementById('q-s5-'+k);
+    if(el)el.value=(prev&&prev[k])||'';
+  });
+}
+
+async function saveStep5(){
+  const user=getData();
+  const step2=user.step2||{};
+  const gc=(step2.goals||[]).length;
+  const goalUpdates=[];
+  for(let i=0;i<gc;i++){
+    goalUpdates.push({
+      statement:(document.getElementById('goal-update-'+i)||{}).value||'',
+      notes:(document.getElementById('goal-notes-'+i)||{}).value||'',
+    });
+  }
+  const data={goalUpdates,savedAt:new Date().toISOString()};
+  ['b1','b2','b3','b4','c1','c2','c3'].forEach(k=>{
+    const el=document.getElementById('q-s5-'+k);
+    if(el)data[k]=el.value;
+  });
+  await saveData('step5',data);
+  renderDashboard();showScreen('screen-dashboard');
+}
+
+/* ---- STEP 6 ---- */
+function loadStep6(){
+  const user=getData();
+  const prev=user.step6||null;
+  const step2=user.step2||{};
+  const step5=user.step5||{};
+  const ra=document.getElementById('review-area-s6');
+  let html='<div class="s1-recall">🌟 <strong>Your journey at a glance:</strong>';
+  if(step2.goals&&step2.goals.length>0){
+    step2.goals.forEach((g,i)=>{
+      const updated=step5.goalUpdates&&step5.goalUpdates[i]&&step5.goalUpdates[i].statement;
+      html+=`<br><strong>Goal ${i+1}:</strong> ${updated||g.statement||'—'}`;
+    });
+  }
+  html+='</div>';
+  ra.innerHTML=html;
+
+  // Restore text fields
+  ['a1','a2','a3','a4','a5','free','share'].forEach(k=>{
+    const el=document.getElementById('q-s6-'+k);
+    if(el)el.value=(prev&&prev[k])||'';
+  });
+
+  // Restore sharing selections
+  const savedSharing=prev&&prev.sharing||[];
+  document.querySelectorAll('.sharing-idea').forEach(el=>{
+    if(savedSharing.includes(el.getAttribute('data-val'))){
+      el.classList.add('selected');
+    } else {
+      el.classList.remove('selected');
+    }
+  });
+}
+
+function toggleShare(el){
+  el.classList.toggle('selected');
+}
+
+async function saveStep6(){
+  const sharing=Array.from(document.querySelectorAll('.sharing-idea.selected')).map(el=>el.getAttribute('data-val'));
+  const data={sharing,savedAt:new Date().toISOString()};
+  ['a1','a2','a3','a4','a5','free','share'].forEach(k=>{
+    const el=document.getElementById('q-s6-'+k);
+    if(el)data[k]=el.value;
+  });
+  await saveData('step6',data);
+  renderDashboard();showScreen('screen-dashboard');
+}
+
+buildStars();
+</script>
+</body>
+</html>
